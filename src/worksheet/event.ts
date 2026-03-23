@@ -28,27 +28,28 @@ function isMouseOnResize(mouseEvent: MouseEvent<HTMLElement>): boolean {
       mouseEvent.currentTarget.offsetLeft -
       mouseEvent.target.offsetWidth) *
     -1;
-  //if (coord < 6) {
-  //  mouseEvent.target.style.cursor = "col-resize";
-  //} else if (mouseEvent.target.style.cursor === "col-resize") {
-  //  mouseEvent.target.style.cursor = null;
-  //}
   return coord < 6;
 }
 // UTILITY //
 
+// HANDLERS //
 const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
-  if (isHeader(e.target) && !isResize(e.target)) {
-  }
-  //console.log(getX(e.target));
+  //if (isHeader(e.target) && !isResize(e.target)) {
+  //}
+  console.log(getX(e.target));
 };
-
 const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
-  if (isResize(e.target)) {
-  }
+  //if (isResize(e.target)) {
+  //}
   if (isHeader(e.target) && !isResize(e.target)) {
+    if (isMouseOnResize(e)) {
+      e.target.style.cursor = "col-resize";
+    } else if (e.target.style.cursor === "col-resize") {
+      e.target.style.cursor = null;
+    }
   }
 };
+// HANDLERS //
 
 function setListeners(element: HTMLDivElement) {
   element.addEventListener("mousedown", handleMouseDown);
