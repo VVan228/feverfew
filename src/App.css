@@ -1,3 +1,7 @@
+.container {
+  overflow: auto;
+}
+
 .worksheet {
   table-layout: fixed;
   border-top: 1px solid transparent;
@@ -7,6 +11,7 @@
   /* very important */
   border-spacing: 0px;
   box-sizing: border-box;
+  width: 0;
 }
 
 .worksheet > thead > tr > td {
@@ -25,6 +30,9 @@
   border-bottom: 1px solid transparent;
   padding: 4px;
   line-height: 1em;
+  white-space: nowrap;
+
+  overflow: hidden;
 }
 
 .worksheet > tbody > tr > td:first-child {
