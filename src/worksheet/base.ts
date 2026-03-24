@@ -5,6 +5,7 @@ const worksheet = {
     resizing: {
       state: false,
       el: null as null | HTMLElement,
+      resizer: null as null | HTMLElement,
     },
   },
   event: {

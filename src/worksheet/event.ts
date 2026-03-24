@@ -1,18 +1,15 @@
 import worksheet from "./base";
 
 // UTILITY //
-// resize
 function isResize(): boolean {
   return worksheet.context.resizing.state;
 }
 function setResize(target: HTMLElement): void {
   worksheet.context.resizing.state = true;
   worksheet.context.resizing.el = target;
-  //worksheet.context.resizing.el.style.backgroundColor = "black";
 }
 function unsetResize(): void {
   worksheet.context.resizing.state = false;
-  //worksheet.context.resizing.el?.style.backgroundColor = "";
   worksheet.context.resizing.el = null;
 }
 function setResizeCursor(e: MouseEvent<HTMLElement>): void {
@@ -23,22 +20,41 @@ function unsetResizeCursor(e: MouseEvent<HTMLElement>): void {
 }
 function resizeToWidth(width: number): void {
   const element = worksheet.context.resizing.el;
-  if (element === null) return;
-  (
-    element.parentNode?.parentNode?.parentNode?.firstChild?.childNodes.item(
-      (element.getAttribute("d-x") as number | null) || -1,
-    ) as HTMLElement
-  ).style.width = `${width}px`;
+  if (!element) return;
+  const col = document
+    .getElementById("colgroup")
+    ?.childNodes.item(getX(element) || -1) as HTMLElement;
+  if (!col) return;
+  col.style.width = `${width}px`;
 }
-// virt. coords
+function setupResizer(target: HTMLElement, container: HTMLElement): void {
+  if (worksheet.context.resizing.resizer === null) {
+    worksheet.context.resizing.resizer = document.getElementById("resizer");
+  }
+  worksheet.context.resizing.resizer!.style.visibility = "visible";
+  worksheet.context.resizing.resizer!.style.left = `${target.getBoundingClientRect().right}px`;
+  worksheet.context.resizing.resizer!.style.height = `${container.getBoundingClientRect().height}px`;
+}
+function hideResizer() {
+  if (worksheet.context.resizing.resizer === null) {
+    worksheet.context.resizing.resizer = document.getElementById("resizer");
+  }
+  worksheet.context.resizing.resizer!.style.visibility = "hidden";
+}
+function moveResizer(e: MouseEvent<HTMLElement>) {
+  if (worksheet.context.resizing.resizer === null) {
+    worksheet.context.resizing.resizer = document.getElementById("resizer");
+  }
+  worksheet.context.resizing.resizer!.style.left = `${e.clientX}px`;
+}
+function isResizable(target: HTMLElement): boolean {
+  return target.hasAttribute("d-resizable");
+}
 function isHeader(target: HTMLElement): boolean {
   return !target.hasAttribute("d-y") && target.hasAttribute("d-x");
 }
 function getX(target: HTMLElement): number | null {
   return target.getAttribute("d-x") as number | null;
-}
-function getY(target: HTMLElement): number | null {
-  return target.getAttribute("d-y") as number | null;
 }
 function isMouseOnResize(mouseEvent: MouseEvent<HTMLElement>): boolean {
   const coord =
@@ -47,7 +63,7 @@ function isMouseOnResize(mouseEvent: MouseEvent<HTMLElement>): boolean {
       mouseEvent.currentTarget.offsetLeft -
       mouseEvent.target.offsetWidth) *
     -1;
-  return coord < 6;
+  return coord < 7;
 }
 function currentResizeWidth(mouseEvent: MouseEvent<HTMLElement>): number {
   const coord =
@@ -60,9 +76,14 @@ function currentResizeWidth(mouseEvent: MouseEvent<HTMLElement>): number {
 
 // HANDLERS //
 const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
-  if (isHeader(e.target) && !isResize() && isMouseOnResize(e)) {
+  if (
+    isResizable(e.target) &&
+    isHeader(e.target) &&
+    !isResize() &&
+    isMouseOnResize(e)
+  ) {
     setResize(e.target);
-    return;
+    setupResizer(e.target, e.currentTarget);
   }
 };
 const handleMouseUp = (e: MouseEvent<HTMLElement>) => {
@@ -73,13 +94,14 @@ const handleMouseUp = (e: MouseEvent<HTMLElement>) => {
     }
     unsetResize();
     unsetResizeCursor(e);
+    hideResizer();
   }
 };
 const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
   if (isResize()) {
-    return;
+    moveResizer(e);
   }
-  if (isHeader(e.target) && !isResize()) {
+  if (isResizable(e.target) && isHeader(e.target) && !isResize()) {
     if (isMouseOnResize(e)) {
       setResizeCursor(e);
     } else {

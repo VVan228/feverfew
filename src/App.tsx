@@ -18,17 +18,22 @@ function App() {
 
   return (
     <div className="container" ref={ref}>
+      <div id="resizer" className="resizer" />
       <table className="worksheet">
-        <colgroup>
+        <colgroup id="colgroup">
+          <col style={{ width: "30px" }} />
           <col style={{ width: "50px" }} />
-          <col style={{ width: "20px" }} />
-          <col style={{ width: "80px" }} />
+          <col style={{ width: "50px" }} />
         </colgroup>
         <thead>
           <tr>
             <td d-x="0"></td>
-            <td d-x="1">A</td>
-            <td d-x="2">B</td>
+            <td d-x="1" d-resizable="true">
+              A
+            </td>
+            <td d-x="2" d-resizable="true">
+              B
+            </td>
           </tr>
         </thead>
         <tbody>
