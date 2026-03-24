@@ -1,5 +1,6 @@
 import worksheet from "./base";
 
+//
 // UTILITY //
 function isResize(): boolean {
   return worksheet.context.resizing.state;
@@ -73,7 +74,9 @@ function currentResizeWidth(mouseEvent: MouseEvent<HTMLElement>): number {
   return coord;
 }
 // UTILITY //
-
+//
+//
+//
 // HANDLERS //
 const handleMouseDown = (e: MouseEvent<HTMLElement>) => {
   if (
@@ -110,6 +113,7 @@ const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
   }
 };
 // HANDLERS //
+//
 
 function setListeners(element: HTMLDivElement) {
   element.addEventListener("mousedown", handleMouseDown);
