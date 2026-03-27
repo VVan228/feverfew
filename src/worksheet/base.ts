@@ -7,6 +7,10 @@ const worksheet = {
       el: null as null | HTMLElement,
       resizer: null as null | HTMLElement,
     },
+    editing: {
+      state: false,
+      element: null as null | HTMLElement,
+    },
   },
   event: {
     setListeners,

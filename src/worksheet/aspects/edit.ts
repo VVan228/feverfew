@@ -11,15 +11,36 @@ function inputPhaseIn(target: HTMLElement): void {
   input.style.height = `${cellSize.height - 2}px`;
   input.style.minHeight = `${cellSize.height - 2}px`;
 
+  // TODO: not text probably?
   input.value = content.textContent || "null";
+  worksheet.context.editing.state = true;
+  worksheet.context.editing.element = target;
+
+  // UNFOCUS = commit
+  input.addEventListener("focusout", inputPhaseOut);
 
   target.appendChild(input);
   target.classList.add("edit");
   input.focus();
 }
-function inputPhaseOut(): void {}
+function inputPhaseOut(): void {
+  worksheet.context.editing.state = false;
+  if (worksheet.context.editing.element === null) return;
+  worksheet.context.editing.element.classList.remove("edit");
 
-function handleDbClick(e: MouseEvent<HTMLElement>) {
+  const input = worksheet.context.editing.element.childNodes.item(
+    0,
+  ) as HTMLInputElement;
+  if (input === null) return;
+  const content = input.value;
+
+  worksheet.context.editing.element.removeChild(input);
+  worksheet.context.editing.element.textContent = content;
+  worksheet.context.editing.element = null;
+}
+
+async function handleDbClick(e: MouseEvent<HTMLElement>) {
+  if (worksheet.context.editing.state) return;
   inputPhaseIn(e.target);
 }
 
