@@ -48,3 +48,20 @@
   height: 10px;
   visibility: hidden;
 }
+
+.edit {
+  overflow: visible !important;
+  box-sizing: border-box;
+  padding: 0 !important;
+  outline: 0 solid transparent;
+}
+
+.worksheet > tbody > tr > td > input {
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  margin: 0;
+  margin-left: 4px;
+  padding: 0;
+  box-sizing: border-box;
+}
